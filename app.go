@@ -27,6 +27,12 @@ type App interface {
 	// SetIcon sets the icon resource used for this application instance.
 	SetIcon(Resource)
 
+	// Name
+	Name() string
+
+	// SetName 
+	SetName(string)
+
 	// Run the application - this starts the event loop and waits until Quit()
 	// is called or the last window closes.
 	// This should be called near the end of a main() function as it will block.
