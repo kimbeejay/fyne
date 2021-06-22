@@ -30,7 +30,7 @@ type App interface {
 	// Name
 	Name() string
 
-	// SetName 
+	// SetName
 	SetName(string)
 
 	// Run the application - this starts the event loop and waits until Quit()

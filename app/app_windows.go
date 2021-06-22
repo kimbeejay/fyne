@@ -5,6 +5,7 @@
 package app
 
 import (
+	_ "embed"
 	"fmt"
 	"io/ioutil"
 	"net/url"
