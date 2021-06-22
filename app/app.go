@@ -21,6 +21,7 @@ type fyneApp struct {
 	driver   fyne.Driver
 	icon     fyne.Resource
 	uniqueID string
+	name     string
 
 	settings *settings
 	storage  *store
@@ -28,6 +29,14 @@ type fyneApp struct {
 	running  bool
 	runMutex sync.Mutex
 	exec     func(name string, arg ...string) *exec.Cmd
+}
+
+func (app *fyneApp) Name() string {
+	return app.name
+}
+
+func (app *fyneApp) SetName(s string) {
+	app.name = s
 }
 
 func (app *fyneApp) Icon() fyne.Resource {

@@ -20,19 +20,8 @@ import (
 	"fyne.io/fyne/v2/theme"
 )
 
-const notificationTemplate = `$title = "%s"
-$content = "%s"
-
-[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
-$template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
-$toastXml = [xml] $template.GetXml()
-$toastXml.GetElementsByTagName("text")[0].AppendChild($toastXml.CreateTextNode($title)) > $null
-$toastXml.GetElementsByTagName("text")[1].AppendChild($toastXml.CreateTextNode($content)) > $null
-
-$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
-$xml.LoadXml($toastXml.OuterXml)
-$toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
-[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("appID").Show($toast);`
+//go:embed tpl/notification_win
+var notificationTemplate string
 
 func isDark() bool {
 	k, err := registry.OpenKey(registry.CURRENT_USER, `SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize`, registry.QUERY_VALUE)
@@ -72,10 +61,11 @@ func (app *fyneApp) OpenURL(url *url.URL) error {
 var scriptNum = 0
 
 func (app *fyneApp) SendNotification(n *fyne.Notification) {
+	appName := escapeNotificationString(app.Name())
 	title := escapeNotificationString(n.Title)
 	content := escapeNotificationString(n.Content)
 
-	script := fmt.Sprintf(notificationTemplate, title, content)
+	script := fmt.Sprintf(notificationTemplate, appName, title, content)
 	go runScript("notify", script)
 }
 

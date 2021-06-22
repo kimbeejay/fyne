@@ -1,0 +1,14 @@
+$appName = "%s"
+$title = "%s"
+$content = "%s"
+
+[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
+$template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
+$toastXml = [xml] $template.GetXml()
+$toastXml.GetElementsByTagName("text")[0].AppendChild($toastXml.CreateTextNode($title)) > $null
+$toastXml.GetElementsByTagName("text")[1].AppendChild($toastXml.CreateTextNode($content)) > $null
+
+$xml = New-Object Windows.Data.Xml.Dom.XmlDocument
+$xml.LoadXml($toastXml.OuterXml)
+$toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appName).Show($toast);
